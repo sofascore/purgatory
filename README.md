@@ -5,27 +5,45 @@
 [![Code Coverage](https://codecov.io/gh/sofascore/purgatory-bundle/graph/badge.svg?token=HWMVLVSTIC)](https://codecov.io/gh/sofascore/purgatory-bundle)
 [![License](https://poser.pugx.org/sofascore/purgatory-bundle/license)](https://packagist.org/packages/sofascore/purgatory-bundle)
 
-A Symfony bundle for creating and sending cache purge requests to HTTP cache backends like Varnish.
+A Symfony bundle designed to automatically generate and send cache purge requests to HTTP cache backends like Varnish.
+It leverages Doctrine events to track changes in entities and generates URLs that need to be purged based on configured
+routes.
 
 ## Features
 
-* TODO
+- **Doctrine Event Integration**: Listens to **Doctrine** lifecycle events (`postUpdate`, `postRemove`, `postPersist`)
+  to automatically detect when entities are modified, created, or deleted.
+
+- **Automatic URL Generation**: Automatically generates purge requests for relevant URLs based on the affected entities
+  and their associated routes.
+
+- **Flexible Configuration**:
+    - Primary configuration is through the PHP attribute, `#[PurgeOn]`, allowing you to directly annotate entity classes
+      with cache purge rules.
+    - Supports YAML configuration for flexibility depending on your project's requirements.
+
+- **Built-in Purger Support**: Comes with built-in support for **Symfony HTTP Cache** and a basic **Varnish**
+  implementation. For advanced use cases, you can create custom purgers by implementing the `PurgerInterface`.
+
+- **Asynchronous Processing**: Includes built-in support for **Symfony Messenger** to process purge requests
+  asynchronously for better scalability and efficiency.
 
 ## Requirements
 
-* [PHP 8.1](http://php.net/releases/8_1_0.php) or greater
-* [Symfony 5.4](https://symfony.com/roadmap/5.4) or [Symfony 6.4](https://symfony.com/roadmap/6.4) or greater
+- [PHP 8.1](http://php.net/releases/8_1_0.php) or higher
+- [Symfony 5.4](https://symfony.com/roadmap/5.4) or [Symfony 6.4](https://symfony.com/roadmap/6.4) or higher
 
 ## Installation
 
-1. Require the bundle with [Composer](https://getcomposer.org/):
+Require the bundle using [Composer](https://getcomposer.org/):
 
-    ```sh
-    composer require sofascore/purgatory-bundle
-    ```
+```sh
+composer require sofascore/purgatory-bundle
+```
 
-1. Create the bundle configuration file under `config/packages/purgatory.yaml`. Here is a reference
-   configuration file:
+If your project doesn't use [Symfony Flex](https://github.com/symfony/flex), continue with the following steps:
+
+1. Create a configuration file under `config/packages/purgatory.yaml`. Here's a reference configuration:
 
     ```yaml
     purgatory:
@@ -86,16 +104,16 @@ A Symfony bundle for creating and sending cache purge requests to HTTP cache bac
 
 ## Usage
 
-TODO
+For detailed instructions and examples, refer to the [documentation](/docs/).
 
 ## Versioning
 
-This project adheres to [Semantic Versioning 2.0.0](http://semver.org/).
+This project follows [Semantic Versioning 2.0.0](http://semver.org/).
 
-## Reporting issues
+## Reporting Issues
 
-Use the [issue tracker](https://github.com/sofascore/purgatory-bundle/issues) to report any issues you might have.
+Use the [issue tracker](https://github.com/sofascore/purgatory-bundle/issues) to report any issues you encounter.
 
 ## License
 
-See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
+See the [LICENSE](LICENSE) file for details (MIT).
