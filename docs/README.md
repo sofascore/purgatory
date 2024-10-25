@@ -190,8 +190,7 @@ In this case, the subscription is added at the class level, making it suitable f
 
 ### Inheritance and Subscriptions
 
-When using inheritance mapping, the bundle automatically creates purge subscriptions for all child entities as well.
-This means that purging rules applied to a parent class will also be inherited by its child classes:
+When using inheritance mapping, any subscription to a parent entity automatically applies to all child entities as well.
 
 ```php
 use Doctrine\ORM\Mapping as ORM;
@@ -206,7 +205,8 @@ class Cat extends Animal {}
 class Dog extends Animal {}
 ```
 
-For example, if you define a purge subscription for the `Animal` entity, it will also apply to `Cat` and `Dog` entities:
+For example, if you define a purge subscription for the `Animal` entity, it will automatically apply to both `Cat` and
+`Dog` entities:
 
 ```php
 use Sofascore\PurgatoryBundle\Attribute\PurgeOn;
@@ -223,8 +223,8 @@ class AnimalController
 ```
 
 In this case, changes to `Cat`, `Dog`, or any future subclasses of `Animal` will trigger the purging of the
-corresponding route. This allows you to define common purging behavior for all related entities by setting it up once on
-the parent class.
+corresponding route. This allows you to define common purging behavior for all related entities by configuring it once
+on the parent class.
 
 ### Explicit Mapping of Route Parameters
 
@@ -420,8 +420,9 @@ Configure the `in-memory` purger in your configuration:
 
 ```yaml
 # config/packages/purgatory.yaml
-purgatory:
-    purger: in-memory
+when@test:
+    purgatory:
+        purger: in-memory
 ```
 
 To write tests, use the `InteractsWithPurgatory` trait in your test class, which provides helper methods to verify
