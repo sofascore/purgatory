@@ -18,23 +18,22 @@ This bundle uses URL-based invalidation instead of tag-based invalidation due to
 ## Supported Backends
 
 The bundle includes built-in support for [Symfony HTTP Cache](https://symfony.com/doc/current/http_cache.html) and a
-basic [Varnish](https://varnish-cache.org/) implementation. Each backend is realized by implementing
+basic [Varnish](https://varnish-cache.org/) implementation. Each backend is implemented through
 the [`PurgerInterface`](/src/Purger/PurgerInterface.php).
 
-It also comes with a `void` purger, which can be used during development when cache purging is not required. The `void`
+It also provides a `void` purger, which can be used during development when cache purging is not needed. The `void`
 purger simply ignores all purge requests, making it ideal for non-production environments. Additionally, an `in-memory`
-purger is provided, designed specifically for testing purposes. The `in-memory` purger simulates purging actions without
-interacting with external cache services, enabling you to verify your purging logic in tests.
+purger is included, specifically designed for testing purposes.
 
-For advanced use cases, you can create [custom purgers](/docs/custom-purgers.md). This allows you to integrate with any
-custom or third-party HTTP cache backend that fits your project requirements.
+For advanced use cases, you can create [custom purgers](/docs/custom-purgers.md) to integrate with any custom or
+third-party HTTP cache backend that fits your project requirements.
 
 ### Configuring Symfony's HTTP Cache
 
 Configure Symfony's HTTP Cache according to
 the [official documentation](https://symfony.com/doc/current/http_cache.html#symfony-reverse-proxy).
 
-Configure the `symfony` purger in your configuration:
+To use the Symfony purger, add the following configuration:
 
 ```yaml
 # config/packages/purgatory.yaml
@@ -64,7 +63,7 @@ sub vcl_recv {
 }
 ```
 
-Configure the `varnish` purger in your configuration:
+To use the Varnish purger, add the following configuration:
 
 ```yaml
 # config/packages/purgatory.yaml
@@ -413,10 +412,11 @@ Now, the purge will only occur when the entity is updated, but not when it is cr
 
 ## Testing
 
-For testing purposes, you can use the `in-memory` purger along with
-the [`InteractsWithPurgatory`](/src/Test/InteractsWithPurgatory.php) trait.
+For testing purposes, you can use the `in-memory` purger, which simulates purging without interacting with external
+cache services. This allows you to verify your purging logic in a controlled environment. To simplify your tests, you
+can also utilize the [`InteractsWithPurgatory`](/src/Test/InteractsWithPurgatory.php) trait.
 
-Configure the `in-memory` purger in your configuration:
+To configure the `in-memory` purger specifically for your test environment, add the following configuration:
 
 ```yaml
 # config/packages/purgatory.yaml
