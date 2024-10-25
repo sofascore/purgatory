@@ -51,7 +51,7 @@ post_details:
     action: update
 
 # Complex route parameters
-post_details:
+posts_list:
     class: App\Entity\Post
     route_params:
         lang: !compound
@@ -59,7 +59,7 @@ post_details:
             - !raw XK
 
 # Using values provided by a service
-post_details:
+posts_list:
     class: App\Entity\Post
     route_params:
         type: !dynamic my_service
