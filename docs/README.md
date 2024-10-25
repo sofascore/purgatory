@@ -21,10 +21,10 @@ The bundle includes built-in support for [Symfony HTTP Cache](https://symfony.co
 basic [Varnish](https://varnish-cache.org/) implementation. Each backend is realized by implementing
 the [`PurgerInterface`](/src/Purger/PurgerInterface.php).
 
-It also comes with a `void`, which can be used during development when cache purging is not required. The `void` simply
-ignores all purge requests, making it ideal for non-production environments. Additionally, an `in-memory` is provided,
-designed specifically for testing purposes. The `in-memory` simulates purging actions without interacting with external
-cache services, enabling you to verify your purging logic in tests.
+It also comes with a `void` purger, which can be used during development when cache purging is not required. The `void`
+purger simply ignores all purge requests, making it ideal for non-production environments. Additionally, an `in-memory`
+purger is provided, designed specifically for testing purposes. The `in-memory` purger simulates purging actions without
+interacting with external cache services, enabling you to verify your purging logic in tests.
 
 For advanced use cases, you can create [custom purgers](/docs/custom-purgers.md). This allows you to integrate with any
 custom or third-party HTTP cache backend that fits your project requirements.
@@ -106,7 +106,17 @@ purgatory:
         transport: async
 ```
 
-Then, run the `messenger:consume` command:
+If needed, you can limit the number of purge requests included in each message by setting a `batch_size`:
+
+```yaml
+# config/packages/purgatory.yaml
+purgatory:
+    messenger:
+        transport: async
+        batch_size: 10
+```
+
+To start processing purge requests asynchronously, run the following command:
 
 ```shell
 bin/console messenger:consume async
@@ -123,7 +133,9 @@ properties with corresponding routes and route parameters. These subscriptions h
 purged based on changes to the entities.
 
 To determine which routes need purging, the bundle relies on **route providers**. These services evaluate the purge
-subscriptions and determine the relevant routes and parameters based on the changes detected in the entities.
+subscriptions and determine the relevant routes and parameters based on the changes detected in the entities. When
+dealing with updates, the route provider returns the same route twice, once with the old parameters and once with the
+new parameters.
 
 Using this information, the bundle generates the URLs that need to be purged. It then sends these purge requests to the
 configured purger, which clears the cached content for those URLs.
@@ -158,9 +170,65 @@ class PostController
 
 Here, the `id` property is automatically mapped to the route parameter with the same name.
 
+You can also apply this to a controller class using the `__invoke` method:
+
+```php
+use Sofascore\PurgatoryBundle\Attribute\PurgeOn;
+use Symfony\Component\Routing\Attribute\Route;
+
+#[Route('/post/{id<\d+>}', name: 'post_details', methods: 'GET')]
+#[PurgeOn(Post::class)]
+class PostDetailsController
+{
+    public function __invoke(Post $post)
+    {
+    }
+}
+```
+
+In this case, the subscription is added at the class level, making it suitable for single-action controllers.
+
+### Inheritance and Subscriptions
+
+When using inheritance mapping, the bundle automatically creates purge subscriptions for all child entities as well.
+This means that purging rules applied to a parent class will also be inherited by its child classes:
+
+```php
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\MappedSuperclass]
+class Animal {}
+
+#[ORM\Entity]
+class Cat extends Animal {}
+
+#[ORM\Entity]
+class Dog extends Animal {}
+```
+
+For example, if you define a purge subscription for the `Animal` entity, it will also apply to `Cat` and `Dog` entities:
+
+```php
+use Sofascore\PurgatoryBundle\Attribute\PurgeOn;
+use Symfony\Component\Routing\Attribute\Route;
+
+class AnimalController
+{
+    #[Route('/animal/{id<\d+>}', name: 'animal_details', methods: 'GET')]
+    #[PurgeOn(Animal::class)]
+    public function detailsAction(Animal $animal)
+    {
+    }
+}
+```
+
+In this case, changes to `Cat`, `Dog`, or any future subclasses of `Animal` will trigger the purging of the
+corresponding route. This allows you to define common purging behavior for all related entities by setting it up once on
+the parent class.
+
 ### Explicit Mapping of Route Parameters
 
-If the parameter names differ, you can explicitly map them:
+If the parameter names differ, you have to explicitly map them:
 
 ```php
 #[Route('/post/{postId<\d+>}', name: 'post_details', methods: 'GET')]
@@ -220,6 +288,43 @@ class Post
 
 In this example, the purge will only occur if the `title` or `author` properties change.
 
+### Targeting `OneTo*` Relations
+
+For `OneToMany` or `OneToOne` relations, the bundle automatically creates inverse subscriptions for related entities.
+This means that changes in the related entity will also trigger a purge for the primary entity's routes.
+
+For example:
+
+```php
+#[Route('/post/{id<\d+>}', name: 'post_details', methods: 'GET')]
+#[PurgeOn(Post::class, target: 'author')]
+public function detailsAction(Post $post)
+{
+}
+```
+
+In this case, if any property of the `Author` entity changes, the post details page will be purged. This automatic
+subscription simplifies the purging logic by handling relationships between entities without additional manual
+configuration.
+
+### Targeting Embeddables
+
+When targeting an embeddable, the bundle subscribes to all properties of the embeddable by default. This is useful when
+the embeddable encapsulates multiple related fields that should trigger purging as a group.
+
+For example:
+
+```php
+#[Route('/author/{id<\d+>}', name: 'author_details', methods: 'GET')]
+#[PurgeOn(Author::class, target: 'address')]
+public function detailsAction(Author $author)
+{
+}
+```
+
+Here, the `address` target subscribes to all properties within the `Address` embeddable class. If any property within
+`Address` changes (such as `street`, `city`, or `postalCode`), the author details page will be purged.
+
 ### Using Serialization Groups
 
 You can also specify which Symfony
@@ -234,7 +339,27 @@ public function detailsAction(Post $post)
 }
 ```
 
-Now, the purge will occur for all properties that are part of the `common` serialization group.
+In this case, the purge will occur for all properties that are part of the `common` serialization group or are listed as
+`#[TargetedProperties]` on a method with that group:
+
+```php
+use Doctrine\ORM\Mapping as ORM;
+use Sofascore\PurgatoryBundle\Attribute\TargetedProperties;
+use Symfony\Component\Serializer\Attribute\Groups;
+
+#[ORM\Entity]
+class Post
+{
+    // ...
+
+    #[Groups('common')]
+    #[TargetedProperties('title', 'author')]
+    public function getTitleAndAuthor(): string
+    {
+        return $this->title.', '.$this->author->getFullName();
+    }
+}
+```
 
 ### Adding Conditional Logic with Expression Language
 

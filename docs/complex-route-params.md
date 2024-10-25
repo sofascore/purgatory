@@ -6,7 +6,8 @@ values to create flexible and powerful purge rules.
 
 ## Using Nested Properties
 
-You can access nested properties of an entity to define route parameters:
+You can access nested properties of an entity to define route parameters by
+using [Symfony's Property Access](https://symfony.com/doc/current/components/property_access.html) syntax:
 
 ```php
 #[Route('/author/{id<\d+>}', name: 'author_details', methods: 'GET')]
@@ -46,12 +47,23 @@ individual post. This ensures that each item in the collection has its correspon
 
 When working with multiple collections, the bundle generates
 a [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of URLs, ensuring that all combinations of
-elements within the collections are purged.
+elements within the collections are purged:
+
+```php
+#[Route('/posts/{tag}/{commentId<\d+>}', name: 'posts_list', methods: 'GET')]
+#[PurgeOn(Post::class, routeParams: ['tag' => 'tags[*].id', 'commentId' => 'comments[*].id'])]
+public function listAction(string $tag, Comment $comment)
+{
+}
+```
+
+In this example, URLs are generated for all combinations of `tag` and `commentId` based on the elements in the `tags`
+and `comments` collections. This ensures that each unique combination within the collections is accounted for.
 
 ## Using Non-Property Values as Route Parameters
 
 In addition to mapping entity properties to route parameters, you can use various other value types. This flexibility
-allows you to customize routes based on raw values, enums, or even dynamic values provided by services.
+allows you to customize routes based on raw values, backed enums, or even dynamic values provided by services.
 
 ### Using Raw Values
 
@@ -60,9 +72,9 @@ You can specify raw values directly in the route parameters:
 ```php
 use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\RawValues;
 
-#[Route('/post/{type}', name: 'post_details', methods: 'GET')]
+#[Route('/posts/{type}', name: 'posts_list', methods: 'GET')]
 #[PurgeOn(Post::class, routeParams: ['type' => new RawValues('foo')])]
-public function detailsAction(Post $post)
+public function listAction(string $type)
 {
 }
 ```
@@ -71,14 +83,14 @@ In this example, the route parameter `type` is explicitly set to the value `foo`
 
 ### Using Enum Values
 
-If you have a predefined set of values in an enum, you can map route parameters to those enum values:
+If you have a predefined set of values in a backed enum, you can map route parameters to those enum values:
 
 ```php
 use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\EnumValues;
 
-#[Route('/post/{type}', name: 'post_details', methods: 'GET')]
+#[Route('/posts/{type}', name: 'posts_list', methods: 'GET')]
 #[PurgeOn(Post::class, routeParams: ['type' => new EnumValues(TypeEnum::class)])]
-public function detailsAction(Post $post)
+public function listAction(string $type)
 {
 }
 ```
@@ -94,12 +106,12 @@ use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\CompoundValues;
 use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\EnumValues;
 use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\RawValues;
 
-#[Route('/post/{lang}', name: 'post_details', methods: 'GET')]
+#[Route('/posts/{lang}', name: 'posts_list', methods: 'GET')]
 #[PurgeOn(Post::class, routeParams: ['lang' => new CompoundValues(
     new EnumValues(LanguageCodes::class),
     new RawValues('XK'), // Kosovo code
 )])]
-public function detailsAction(Post $post)
+public function listAction(string $lang)
 {
 }
 ```
@@ -115,9 +127,9 @@ route parameters that depend on context or runtime information:
 ```php
 use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\DynamicValues;
 
-#[Route('/post/{type}', name: 'post_details', methods: 'GET')]
+#[Route('/posts/{type}', name: 'posts_list', methods: 'GET')]
 #[PurgeOn(Post::class, routeParams: ['type' => new DynamicValues('my_service')])]
-public function detailsAction(Post $post)
+public function listAction(string $lang)
 {
 }
 ```
@@ -140,7 +152,7 @@ use Sofascore\PurgatoryBundle\Attribute\AsRouteParamService;
 #[AsRouteParamService('my_service')]
 class MyService
 {
-    public function __invoke()
+    public function __invoke(Post $post)
     {
         // Return the desired value for the route parameter
     }
