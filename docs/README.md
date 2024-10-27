@@ -19,13 +19,13 @@ This bundle uses URL-based invalidation instead of tag-based invalidation due to
 
 The bundle includes built-in support for [Symfony HTTP Cache](https://symfony.com/doc/current/http_cache.html) and a
 basic [Varnish](https://varnish-cache.org/) implementation. Each backend is implemented through
-the [`PurgerInterface`](/src/Purger/PurgerInterface.php).
+the [`PurgerInterface`][0].
 
 It also provides a `void` purger, which can be used during development when cache purging is not needed. The `void`
 purger simply ignores all purge requests, making it ideal for non-production environments. Additionally, an `in-memory`
 purger is included, specifically designed for testing purposes.
 
-For advanced use cases, you can create [custom purgers](/docs/custom-purgers.md) to integrate with any custom or
+For advanced use cases, you can create [custom purgers](custom-purgers.md) to integrate with any custom or
 third-party HTTP cache backend that fits your project requirements.
 
 ### Configuring Symfony's HTTP Cache
@@ -139,14 +139,14 @@ new parameters.
 Using this information, the bundle generates the URLs that need to be purged. It then sends these purge requests to the
 configured purger, which clears the cached content for those URLs.
 
-You can also create [custom route providers](/docs/custom-route-providers.md) to define additional routes for specific
+You can also create [custom route providers](custom-route-providers.md) to define additional routes for specific
 entities and properties, giving you greater control over purging behavior in more complex scenarios.
 
 ## Configuring Purge Subscriptions
 
-Purge subscriptions can be configured using the [`#[PurgeOn]`](/src/Attribute/PurgeOn.php) attribute.
+Purge subscriptions can be configured using the [`#[PurgeOn]`][1] attribute.
 
-You can also configure purge subscriptions [using YAML](/docs/purge-subscriptions-using-yaml.md). This is particularly
+You can also configure purge subscriptions [using YAML](purge-subscriptions-using-yaml.md). This is particularly
 useful if you have routes without an associated controller or action.
 
 ### Basic Example
@@ -237,7 +237,7 @@ public function detailsAction(Post $post)
 }
 ```
 
-For more advanced examples of mapping route parameters, see the [dedicated section](/docs/complex-route-params.md).
+For more advanced examples of mapping route parameters, see the [dedicated section](complex-route-params.md).
 
 ### Targeting Specific Properties
 
@@ -265,8 +265,7 @@ public function detailsAction(Post $post)
 }
 ```
 
-To associate specific properties with a method, use the [`#[TargetedProperties]`](/src/Attribute/TargetedProperties.php)
-attribute on your entity method:
+To associate specific properties with a method, use the [`#[TargetedProperties]`][2] attribute on your entity method:
 
 ```php
 use Doctrine\ORM\Mapping as ORM;
@@ -376,7 +375,7 @@ public function detailsAction(Post $post)
 
 In this example, the purge will only occur if the post has more than 3,000 upvotes.
 
-You can also add [custom Expression Language functions](/docs/custom-expression-language-functions.md).
+You can also add [custom Expression Language functions](custom-expression-language-functions.md).
 
 ### Limiting Purge to Specific Routes
 
@@ -396,7 +395,7 @@ In this example, only the `post_details` route will be purged.
 
 ### Limiting by Action Type
 
-You can also limit the purging to a specific action as defined in the [`Action`](/src/Listener/Enum/Action.php) enum:
+You can also limit the purging to a specific action as defined in the [`Action`][3] enum:
 
 ```php
 use Sofascore\PurgatoryBundle\Listener\Enum\Action;
@@ -414,7 +413,7 @@ Now, the purge will only occur when the entity is updated, but not when it is cr
 
 For testing purposes, you can use the `in-memory` purger, which simulates purging without interacting with external
 cache services. This allows you to verify your purging logic in a controlled environment. To simplify your tests, you
-can also utilize the [`InteractsWithPurgatory`](/src/Test/InteractsWithPurgatory.php) trait.
+can also utilize the [`InteractsWithPurgatory`][4] trait.
 
 To configure the `in-memory` purger specifically for your test environment, add the following configuration:
 
@@ -482,8 +481,18 @@ This command provides insights into which routes and parameters are associated w
 
 ## See Also
 
-- [Custom Purgers](/docs/custom-purgers.md)
-- [Custom Route Providers](/docs/custom-route-providers.md)
-- [Complex Route Parameters](/docs/complex-route-params.md)
-- [Configure Purge Subscriptions Using YAML](/docs/purge-subscriptions-using-yaml.md)
-- [Custom Expression Language Functions](/docs/custom-expression-language-functions.md)
+- [Custom Purgers](custom-purgers.md)
+- [Custom Route Providers](custom-route-providers.md)
+- [Complex Route Parameters](complex-route-params.md)
+- [Configure Purge Subscriptions Using YAML](purge-subscriptions-using-yaml.md)
+- [Custom Expression Language Functions](custom-expression-language-functions.md)
+
+[0]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Purger/PurgerInterface.php
+
+[1]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Attribute/PurgeOn.php
+
+[2]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Attribute/TargetedProperties.php
+
+[3]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Listener/Enum/Action.php
+
+[4]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Test/InteractsWithPurgatory.php

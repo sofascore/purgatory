@@ -1,8 +1,8 @@
 # Custom Purgers
 
-You can create custom purgers by implementing the [`PurgerInterface`](/src/Purger/PurgerInterface.php). This allows you
-to define your own logic for handling purge requests. Once implemented, be sure to tag your custom purger with
-`purgatory.purger` to make it available for configuration.
+You can create custom purgers by implementing the [`PurgerInterface`][0]. This allows you to define your own logic for
+handling purge requests. Once implemented, be sure to tag your custom purger with `purgatory.purger` to make it
+available for configuration.
 
 Here's an example of a custom purger for Cloudflare:
 
@@ -31,3 +31,5 @@ purgatory:
 ```
 
 In this example, the alias `cloudflare` is used to refer to the custom purger.
+
+[0]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Purger/PurgerInterface.php

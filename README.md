@@ -104,7 +104,7 @@ If your project doesn't use [Symfony Flex](https://github.com/symfony/flex), con
 
 ## Usage
 
-For detailed instructions and examples, refer to the [documentation](/docs/).
+For detailed instructions and examples, refer to the [documentation](https://sofascore.github.io/purgatory-bundle/).
 
 ## Versioning
 

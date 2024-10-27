@@ -1,0 +1,2 @@
+title: "Sofascore Purgatory Bundle"
+description: "A Symfony bundle for creating and sending cache purge requests to HTTP cache backends like Varnish."

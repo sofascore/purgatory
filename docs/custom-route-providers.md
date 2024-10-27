@@ -1,15 +1,13 @@
 # Custom Route Providers
 
-To create a custom route provider, implement
-the [`RouteProviderInterface`](/src/RouteProvider/RouteProviderInterface.php). This interface defines two methods:
+To create a custom route provider, implement the [`RouteProviderInterface`][0]. This interface defines two methods:
 
 - **`supports` method**: Determines whether the route provider supports a given entity and action. This method helps
   filter which entities the provider should be responsible for.
 
 - **`provideRoutesFor` method**: Generates and yields routes for the given entity. This method uses instances of
-  [`PurgeRoute`](/src/RouteProvider/PurgeRoute.php) to define route names and their parameters. You can implement custom
-  logic to determine the appropriate routes based on the action, the entity, and any changes detected in the entity's
-  properties.
+  [`PurgeRoute`][1] to define route names and their parameters. You can implement custom logic to determine the
+  appropriate routes based on the action, the entity, and any changes detected in the entity's properties.
 
 ### Example
 
@@ -57,3 +55,7 @@ App\RouteProvider\MyPostRouteProvider:
 
 By tagging it with `purgatory.route_provider`, the bundle will automatically recognize and use your custom route
 provider when processing purge requests.
+
+[0]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/RouteProvider/RouteProviderInterface.php
+
+[1]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/RouteProvider/PurgeRoute.php
