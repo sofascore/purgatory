@@ -143,8 +143,7 @@ App\MyService:
         - { name: 'purgatory.route_parameter_service', alias: my_service }
 ```
 
-Alternatively, you can use the [`#[AsRouteParamService]`](/src/Attribute/AsRouteParamService.php) attribute directly in
-the service class:
+Alternatively, you can use the [`#[AsRouteParamService]`][0] attribute directly in the service class:
 
 ```php
 use Sofascore\PurgatoryBundle\Attribute\AsRouteParamService;
@@ -158,3 +157,5 @@ class MyService
     }
 }
 ```
+
+[0]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Attribute/AsRouteParamService.php

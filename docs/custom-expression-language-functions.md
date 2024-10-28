@@ -19,8 +19,7 @@ App\ShouldPurge:
         - { name: 'purgatory.expression_language_function', function: should_purge }
 ```
 
-Alternatively, you can use the [`#[AsExpressionLanguageFunction]`](/src/Attribute/AsExpressionLanguageFunction.php)
-attribute directly in the service class:
+Alternatively, you can use the [`#[AsExpressionLanguageFunction]`][0] attribute directly in the service class:
 
 ```php
 use Sofascore\PurgatoryBundle\Attribute\AsExpressionLanguageFunction;
@@ -34,3 +33,5 @@ class ShouldPurge
     }
 }
 ```
+
+[0]: https://github.com/sofascore/purgatory-bundle/blob/1.x/src/Attribute/AsExpressionLanguageFunction.php
