@@ -10,19 +10,21 @@ use Sofascore\PurgatoryBundle\Cache\RouteMetadata\RouteMetadata;
 use Sofascore\PurgatoryBundle\Exception\LogicException;
 use Sofascore\PurgatoryBundle\Exception\RuntimeException;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @implements TargetResolverInterface<ForGroups>
  */
 final class ForGroupsResolver implements TargetResolverInterface
 {
-    public function __construct(
-        private readonly PropertyListExtractorInterface $propertyListExtractor,
-    ) {
-        if (!interface_exists(SerializerInterface::class)) {
+    private readonly PropertyListExtractorInterface $propertyListExtractor;
+
+    public function __construct(?PropertyListExtractorInterface $propertyListExtractor)
+    {
+        if (null === $propertyListExtractor) {
             throw new LogicException('You cannot use the "ForGroups" attribute because the Symfony Serializer component is not installed. Try running "composer require symfony/serializer".');
         }
+
+        $this->propertyListExtractor = $propertyListExtractor;
     }
 
     /**
