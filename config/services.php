@@ -64,7 +64,7 @@ return static function (ContainerConfigurator $container) {
         ->set('sofascore.purgatory.target_resolver.for_groups', ForGroupsResolver::class)
             ->tag('purgatory.target_resolver')
             ->args([
-                service('property_info.serializer_extractor'),
+                service('property_info.serializer_extractor')->nullOnInvalid(),
             ])
 
         ->set('sofascore.purgatory.purge_subscription_provider', PurgeSubscriptionProvider::class)
