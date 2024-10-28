@@ -144,7 +144,8 @@ entities and properties, giving you greater control over purging behavior in mor
 
 ## Configuring Purge Subscriptions
 
-Purge subscriptions can be configured using the [`#[PurgeOn]`][1] attribute.
+Purge subscriptions can be configured using the [`#[PurgeOn]`][1] attribute. Controllers using this attribute **MUST**
+be registered as services.
 
 You can also configure purge subscriptions [using YAML](purge-subscriptions-using-yaml.md). This is particularly
 useful if you have routes without an associated controller or action.
