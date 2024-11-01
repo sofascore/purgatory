@@ -1,6 +1,6 @@
 # Getting Started
 
-The bundle is designed to automatically generate and send cache purge requests to HTTP cache backends such as Symfony's
+Purgatory is designed to automatically generate and send cache purge requests to HTTP cache backends such as Symfony's
 HTTP cache or Varnish. It leverages Doctrine events to track changes in entities and generates URLs that need to be
 purged based on configured routes.
 

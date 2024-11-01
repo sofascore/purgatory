@@ -5,9 +5,9 @@
 [![Code Coverage](https://codecov.io/gh/sofascore/purgatory-bundle/graph/badge.svg?token=HWMVLVSTIC)](https://codecov.io/gh/sofascore/purgatory-bundle)
 [![License](https://poser.pugx.org/sofascore/purgatory-bundle/license)](https://packagist.org/packages/sofascore/purgatory-bundle)
 
-A Symfony bundle designed to automatically generate and send cache purge requests to HTTP cache backends like Varnish.
-It leverages Doctrine events to track changes in entities and generates URLs that need to be purged based on configured
-routes.
+Purgatory is a Symfony bundle designed to automatically generate and send cache purge requests to HTTP cache backends
+like Varnish. It leverages Doctrine events to track changes in entities and generates URLs that need to be purged based
+on configured routes.
 
 ## Features
 
@@ -18,8 +18,8 @@ routes.
   and their associated routes.
 
 - **Flexible Configuration**:
-    - Primary configuration is through the PHP attribute, `#[PurgeOn]`, allowing you to directly annotate entity classes
-      with cache purge rules.
+    - Primary configuration is done through the `#[PurgeOn]` attribute, allowing you to annotate controller actions with
+      cache purge rules based on entities used in the response.
     - Supports YAML configuration for flexibility depending on your project's requirements.
 
 - **Built-in Purger Support**: Comes with built-in support for **Symfony HTTP Cache** and a basic **Varnish**
