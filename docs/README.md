@@ -1,8 +1,8 @@
 # Getting Started
 
-Purgatory is designed to automatically generate and send cache purge requests to HTTP cache backends such as Symfony's
-HTTP cache or Varnish. It leverages Doctrine events to track changes in entities and generates URLs that need to be
-purged based on configured routes.
+Purgatory is a Symfony bundle for HTTP cache invalidation, designed to automatically generate and send cache purge
+requests to HTTP cache backends like Symfony's HTTP cache or Varnish. It leverages Doctrine events to track changes in
+entities and generates URLs that need purging based on configured routes.
 
 ## Why URL-based Invalidation?
 
