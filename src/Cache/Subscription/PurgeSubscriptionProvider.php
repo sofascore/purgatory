@@ -94,9 +94,7 @@ final class PurgeSubscriptionProvider implements PurgeSubscriptionProviderInterf
                 foreach ($this->subscriptionResolvers as $resolver) {
                     yield from $subscriptions = $resolver->resolveSubscription($routeMetadata, $entityMetadata, $routeParams, $property);
 
-                    if (true === $subscriptions->getReturn()) {
-                        $targetResolved = true;
-                    }
+                    $targetResolved = $targetResolved || $subscriptions->getReturn();
                 }
 
                 if (!$targetResolved) {
