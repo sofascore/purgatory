@@ -81,4 +81,5 @@ jobs:
                     fail_ci_if_error: true
                     file: coverage.xml
                     flags: ${{ matrix.php }}
-                    token: ${{ secrets.CODECOV_TOKEN }}
+                env:
+                    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
