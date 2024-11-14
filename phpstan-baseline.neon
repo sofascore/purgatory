@@ -13,6 +13,12 @@ parameters:
 			path: src/Attribute/RouteParamValue/PropertyValues.php
 
 		-
+			message: '#^Parameter \#1 \$configuration of class Sofascore\\PurgatoryBundle\\Cache\\Configuration\\Configuration constructor expects array\<non\-empty\-string, list\<array\{routeName\: string, routeParams\?\: array\<string, array\{type\: string, values\: list\<mixed\>, optional\?\: true\}\>, if\?\: string, actions\?\: non\-empty\-list\<Sofascore\\PurgatoryBundle\\Listener\\Enum\\Action\>\}\>\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Cache/Configuration/CachedConfigurationLoader.php
+
+		-
 			message: '#^Method Sofascore\\PurgatoryBundle\\Cache\\Configuration\\Subscriptions\:\:getIterator\(\) should return Traversable\<int, array\{routeName\: string, routeParams\?\: array\<string, array\{type\: string, values\: list\<mixed\>, optional\?\: true\}\>, if\?\: string, actions\?\: non\-empty\-list\<Sofascore\\PurgatoryBundle\\Listener\\Enum\\Action\>\}\> but returns ArrayIterator\<int, array\{routeName\: string, routeParams\?\: array\<string, array\{type\: string, values\: list\<mixed\>, optional\?\: bool\}\>, if\?\: string, actions\?\: non\-empty\-list\<Sofascore\\PurgatoryBundle\\Listener\\Enum\\Action\>\}\>\.$#'
 			identifier: return.type
 			count: 1
