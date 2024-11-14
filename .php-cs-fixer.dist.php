@@ -20,6 +20,7 @@ return (new PhpCsFixer\Config())
         'heredoc_to_nowdoc' => true,
         'no_superfluous_phpdoc_tags' => true,
         'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
+        'protected_to_private' => true,
         'self_static_accessor' => true,
         'single_line_throw' => false,
         'trailing_comma_in_multiline' => [
