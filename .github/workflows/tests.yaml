@@ -74,7 +74,7 @@ jobs:
                     report_paths: ./junit.xml
 
             -   name: Upload Test Coverage
-                if: ${{ success() }}
+                if: ${{ success() && (github.event_name == 'pull_request' || vars.UPLOAD_COVERAGE == 'true') }}
                 uses: codecov/codecov-action@v4
                 with:
                     codecov_yml_path: .github/codecov.yaml
