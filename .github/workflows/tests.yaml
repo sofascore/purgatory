@@ -68,13 +68,13 @@ jobs:
                 uses: mikepenz/action-junit-report@v4
                 if: always()
                 with:
-                    check_name: PHPUnit Execution Report
-                    fail_on_failure: 'true'
-                    require_tests: 'true'
+                    annotate_only: true
+                    fail_on_failure: true
+                    require_tests: true
                     report_paths: ./junit.xml
 
             -   name: Upload Test Coverage
-                if: ${{ success() }}
+                if: ${{ success() && (github.event_name == 'pull_request' || vars.UPLOAD_COVERAGE == 'true') }}
                 uses: codecov/codecov-action@v4
                 with:
                     codecov_yml_path: .github/codecov.yaml
