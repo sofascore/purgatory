@@ -56,7 +56,7 @@ jobs:
                     tools: flex
 
             -   name: Install Dependencies
-                uses: ramsey/composer-install@v2
+                uses: ramsey/composer-install@v3
                 with:
                     composer-options: '--prefer-dist'
                     dependency-versions: ${{ matrix.dependencies }}
@@ -67,7 +67,7 @@ jobs:
                 run: vendor/bin/phpunit --log-junit=junit.xml --coverage-text --coverage-clover=coverage.xml
 
             -   name: Publish Test Report
-                uses: mikepenz/action-junit-report@v4
+                uses: mikepenz/action-junit-report@v5
                 if: always()
                 with:
                     annotate_only: true
@@ -77,10 +77,10 @@ jobs:
 
             -   name: Upload Test Coverage
                 if: ${{ success() && (github.event_name == 'pull_request' || vars.UPLOAD_COVERAGE == 'true') }}
-                uses: codecov/codecov-action@v4
+                uses: codecov/codecov-action@v5
                 with:
                     codecov_yml_path: .github/codecov.yaml
                     fail_ci_if_error: true
-                    file: coverage.xml
+                    files: coverage.xml
                     flags: ${{ matrix.php }}
                     token: ${{ secrets.CODECOV_TOKEN }}
