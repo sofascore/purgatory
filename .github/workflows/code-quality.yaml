@@ -67,7 +67,7 @@ jobs:
                     tools: psalm
 
             -   name: Install Dependencies
-                uses: ramsey/composer-install@v2
+                uses: ramsey/composer-install@v3
                 with:
                     composer-options: '--prefer-dist'
 
@@ -89,7 +89,7 @@ jobs:
                     tools: phpstan
 
             -   name: Install Dependencies
-                uses: ramsey/composer-install@v2
+                uses: ramsey/composer-install@v3
                 with:
                     composer-options: '--prefer-dist'
 
