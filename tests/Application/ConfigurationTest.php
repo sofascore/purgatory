@@ -36,6 +36,8 @@ final class ConfigurationTest extends AbstractKernelTestCase
         self::initializeApplication(['test_case' => 'TestApplication']);
 
         self::$configuration = self::getContainer()->get('sofascore.purgatory.configuration_loader')->load();
+
+        self::ensureKernelShutdown();
     }
 
     public static function tearDownAfterClass(): void

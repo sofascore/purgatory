@@ -47,7 +47,7 @@
     },
     "require-dev": {
         "doctrine/common": "^3.2",
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^11.5",
         "symfony/cache": "^5.4 || ^6.4 || ^7.0",
         "symfony/doctrine-messenger": "^5.4 || ^6.4 || ^7.0",
         "symfony/expression-language": "^5.4 || ^6.4 || ^7.0",
