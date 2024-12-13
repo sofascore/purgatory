@@ -11,6 +11,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\ErrorHandler\ErrorHandler;
 use Symfony\Component\HttpKernel\Kernel;
 
 final class TestKernel extends Kernel
@@ -62,6 +63,15 @@ final class TestKernel extends Kernel
         yield new FrameworkBundle();
         yield new DoctrineBundle();
         yield new PurgatoryBundle();
+    }
+
+    public function shutdown(): void
+    {
+        $handler = set_exception_handler('var_dump');
+        restore_exception_handler();
+        if (\is_array($handler) && $handler[0] instanceof ErrorHandler) {
+            restore_exception_handler();
+        }
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sofascore\PurgatoryBundle\Tests\Test;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sofascore\PurgatoryBundle\Purger\AsyncPurger;
@@ -18,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(InteractsWithPurgatory::class)]
 final class InteractsWithPurgatoryTest extends TestCase
 {
     #[DataProvider('provideTraitTestCases')]
