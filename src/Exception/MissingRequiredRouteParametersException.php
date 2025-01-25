@@ -6,7 +6,7 @@ namespace Sofascore\PurgatoryBundle\Exception;
 
 final class MissingRequiredRouteParametersException extends \LogicException implements PurgatoryException
 {
-    private const MESSAGE = 'Can not purge route "%s" because some required route parameters are missing (%s)';
+    private const MESSAGE = 'Cannot purge route "%s" because the following required route parameters are missing: "%s".';
 
     /**
      * @param non-empty-list<string> $missingRouteParams

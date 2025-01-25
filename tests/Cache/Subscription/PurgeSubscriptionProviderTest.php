@@ -341,9 +341,9 @@ final class PurgeSubscriptionProviderTest extends TestCase
 
         $this->expectException(\LogicException::class);
 
-        $missingParams = implode(', ', $expectedMissingRequiredParameters);
+        $missingParams = implode('", "', $expectedMissingRequiredParameters);
         $this->expectExceptionMessage(
-            "Can not purge route \"foo\" because some required route parameters are missing ($missingParams)",
+            "Cannot purge route \"foo\" because the following required route parameters are missing: \"$missingParams\".",
         );
 
         [...$purgeSubscriptionProvider->provide()];
