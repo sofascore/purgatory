@@ -321,8 +321,8 @@ final class PurgeSubscriptionProviderTest extends TestCase
         [...$purgeSubscriptionProvider->provide()];
     }
 
-    #[DataProvider('provideRouteMetadataWithInvalidPurgeRouteParams')]
-    public function testInvalidRouteParams(
+    #[DataProvider('provideRouteMetadataWithMissingPurgeRouteParams')]
+    public function testWithMissingRouteParams(
         RouteMetadata $routeMetadata,
         array $expectedMissingRequiredParameters,
     ): void {
@@ -349,7 +349,7 @@ final class PurgeSubscriptionProviderTest extends TestCase
         [...$purgeSubscriptionProvider->provide()];
     }
 
-    public static function provideRouteMetadataWithInvalidPurgeRouteParams(): iterable
+    public static function provideRouteMetadataWithMissingPurgeRouteParams(): iterable
     {
         $route = new Route(
             path: '/{foo}',
