@@ -16,7 +16,7 @@ final class MissingRequiredRouteParametersException extends \LogicException impl
         public readonly array $missingRouteParams,
     ) {
         parent::__construct(
-            \sprintf(self::MESSAGE, $this->routeName, implode(', ', $this->missingRouteParams)),
+            \sprintf(self::MESSAGE, $this->routeName, implode('", "', $this->missingRouteParams)),
         );
     }
 }
