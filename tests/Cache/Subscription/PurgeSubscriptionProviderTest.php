@@ -320,4 +320,158 @@ final class PurgeSubscriptionProviderTest extends TestCase
 
         [...$purgeSubscriptionProvider->provide()];
     }
+
+    #[DataProvider('provideRouteMetadataWithInvalidPurgeRouteParams')]
+    public function testInvalidRouteParams(
+        RouteMetadata $routeMetadata,
+        array $expectedMissingRequiredParameters,
+    ): void {
+        $routeMetadataProvider = $this->createMock(RouteMetadataProviderInterface::class);
+        $routeMetadataProvider->method('provide')
+            ->willReturnCallback(function () use ($routeMetadata) {
+                yield $routeMetadata;
+            });
+
+        $purgeSubscriptionProvider = new PurgeSubscriptionProvider(
+            subscriptionResolvers: [],
+            routeMetadataProviders: [$routeMetadataProvider],
+            managerRegistry: $this->createMock(ManagerRegistry::class),
+            targetResolverLocator: $this->createMock(ContainerInterface::class),
+        );
+
+        $this->expectException(\LogicException::class);
+
+        $missingParams = implode(', ', $expectedMissingRequiredParameters);
+        $this->expectExceptionMessage(
+            "Can not purge route \"foo\" because some required route parameters are missing ($missingParams)",
+        );
+
+        [...$purgeSubscriptionProvider->provide()];
+    }
+
+    public static function provideRouteMetadataWithInvalidPurgeRouteParams(): iterable
+    {
+        $route = new Route(
+            path: '/{foo}',
+            defaults: [],
+        );
+        yield [
+            'routeMetadata' => new RouteMetadata(
+                routeName: 'foo',
+                route: $route,
+                purgeOn: new PurgeOn(
+                    class: 'FooEntity',
+                    routeParams: [
+                        'bar' => 'bar',
+                    ],
+                ),
+                reflectionMethod: null,
+            ),
+            'expectedMissingRequiredParameters' => ['foo'],
+        ];
+
+        $route = new Route(
+            path: '/{foo}/{bar}',
+            defaults: [
+                'bar' => 'bar',
+            ],
+        );
+        yield [
+            'routeMetadata' => new RouteMetadata(
+                routeName: 'foo',
+                route: $route,
+                purgeOn: new PurgeOn(
+                    class: 'FooEntity',
+                    routeParams: [
+                        'bar' => 'bar',
+                    ],
+                ),
+                reflectionMethod: null,
+            ),
+            'expectedMissingRequiredParameters' => ['foo'],
+        ];
+
+        $route = new Route(
+            path: '/{foo}/{bar}/{baz}',
+            defaults: [
+                'bar' => 'bar',
+                'baz' => 'baz',
+            ],
+        );
+        yield [
+            'routeMetadata' => new RouteMetadata(
+                routeName: 'foo',
+                route: $route,
+                purgeOn: new PurgeOn(
+                    class: 'FooEntity',
+                    routeParams: [
+                        'baz' => 'baz',
+                    ],
+                ),
+                reflectionMethod: null,
+            ),
+            'expectedMissingRequiredParameters' => ['foo'],
+        ];
+
+        $route = new Route(
+            path: '/{foo}/{bar}/{baz}',
+            defaults: [
+                'baz' => 'baz',
+            ],
+        );
+        yield [
+            'routeMetadata' => new RouteMetadata(
+                routeName: 'foo',
+                route: $route,
+                purgeOn: new PurgeOn(
+                    class: 'FooEntity',
+                    routeParams: [
+                        'foo' => 'foo',
+                    ],
+                ),
+                reflectionMethod: null,
+            ),
+            'expectedMissingRequiredParameters' => ['bar'],
+        ];
+
+        $route = new Route(
+            path: '/{foo}/{bar}/{baz}',
+            defaults: [
+                'baz' => 'baz',
+            ],
+        );
+        yield [
+            'routeMetadata' => new RouteMetadata(
+                routeName: 'foo',
+                route: $route,
+                purgeOn: new PurgeOn(
+                    class: 'FooEntity',
+                    routeParams: [
+                        'qux' => 'qux',
+                    ],
+                ),
+                reflectionMethod: null,
+            ),
+            'expectedMissingRequiredParameters' => ['foo', 'bar'],
+        ];
+
+        $route = new Route(
+            path: '/{foo}/{bar}/{baz}',
+            defaults: [],
+        );
+        yield [
+            'routeMetadata' => new RouteMetadata(
+                routeName: 'foo',
+                route: $route,
+                purgeOn: new PurgeOn(
+                    class: 'FooEntity',
+                    routeParams: [
+                        'bar' => 'bar',
+                    ],
+                ),
+                reflectionMethod: null,
+            ),
+            'expectedMissingRequiredParameters' => ['foo', 'baz'],
+        ];
+    }
 }

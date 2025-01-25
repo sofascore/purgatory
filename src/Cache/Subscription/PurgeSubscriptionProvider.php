@@ -10,9 +10,11 @@ use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\PropertyValues;
 use Sofascore\PurgatoryBundle\Attribute\RouteParamValue\ValuesInterface;
 use Sofascore\PurgatoryBundle\Attribute\Target\TargetInterface;
 use Sofascore\PurgatoryBundle\Cache\PropertyResolver\SubscriptionResolverInterface;
+use Sofascore\PurgatoryBundle\Cache\RouteMetadata\RouteMetadata;
 use Sofascore\PurgatoryBundle\Cache\RouteMetadata\RouteMetadataProviderInterface;
 use Sofascore\PurgatoryBundle\Cache\TargetResolver\TargetResolverInterface;
 use Sofascore\PurgatoryBundle\Exception\EntityMetadataNotFoundException;
+use Sofascore\PurgatoryBundle\Exception\MissingRequiredRouteParametersException;
 use Sofascore\PurgatoryBundle\Exception\TargetSubscriptionNotResolvableException;
 
 /**
@@ -62,6 +64,7 @@ final class PurgeSubscriptionProvider implements PurgeSubscriptionProviderInterf
                     $routeParams[$pathVariable] = new PropertyValues($pathVariable);
                 }
             } else {
+                $this->validateRouteParams(array_keys($purgeOn->routeParams), $routeMetadata);
                 $routeParams = $purgeOn->routeParams;
             }
 
@@ -101,6 +104,30 @@ final class PurgeSubscriptionProvider implements PurgeSubscriptionProviderInterf
                     throw new TargetSubscriptionNotResolvableException($routeMetadata->routeName, $class, $property);
                 }
             }
+        }
+    }
+
+    /**
+     * Check if all required route params are present in PurgeOn.
+     *
+     * @var non-empty-array<string>
+     */
+    private function validateRouteParams(array $routeParams, RouteMetadata $routeMetadata): void
+    {
+        /** @var list<string> $pathVariables */
+        $pathVariables = $routeMetadata->route->compile()->getPathVariables();
+        $route = $routeMetadata->route;
+
+        $requiredRouteParams = array_filter(
+            array: $pathVariables,
+            callback: static fn (string $var): bool => !$route->hasDefault($var),
+        );
+
+        if ([] !== $missingRouteParams = array_diff($requiredRouteParams, $routeParams)) {
+            throw new MissingRequiredRouteParametersException(
+                routeName: $routeMetadata->routeName,
+                missingRouteParams: $missingRouteParams,
+            );
         }
     }
 }
