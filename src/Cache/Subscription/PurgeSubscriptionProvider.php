@@ -110,7 +110,7 @@ final class PurgeSubscriptionProvider implements PurgeSubscriptionProviderInterf
     /**
      * Check if all required route params are present in PurgeOn.
      *
-     * @var non-empty-array<string>
+     * @param non-empty-list<string> $routeParams
      */
     private function validateRouteParams(array $routeParams, RouteMetadata $routeMetadata): void
     {
@@ -126,7 +126,7 @@ final class PurgeSubscriptionProvider implements PurgeSubscriptionProviderInterf
         if ([] !== $missingRouteParams = array_diff($requiredRouteParams, $routeParams)) {
             throw new MissingRequiredRouteParametersException(
                 routeName: $routeMetadata->routeName,
-                missingRouteParams: $missingRouteParams,
+                missingRouteParams: array_values($missingRouteParams),
             );
         }
     }
