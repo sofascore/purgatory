@@ -40,7 +40,6 @@ final class AssociationResolver implements SubscriptionResolverInterface
         /** @var AssociationMapping|array{type: int, inversedBy?: ?string} $associationMapping */
         $associationMapping = $classMetadata->getAssociationMapping($target);
 
-        /** @var int $associationType */
         $associationType = $associationMapping instanceof AssociationMapping
             ? $associationMapping->type()
             : $associationMapping['type'];

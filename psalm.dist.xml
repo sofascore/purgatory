@@ -7,6 +7,7 @@
     errorLevel="1"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
+    findUnusedVariablesAndParams="true"
     resolveFromConfigFile="true"
 >
     <projectFiles>

@@ -48,7 +48,6 @@ final class AttributeMetadataProvider implements RouteMetadataProviderInterface
 
             foreach ([new \ReflectionClass($reflectionMethod->class), $reflectionMethod] as $reflection) {
                 foreach ($reflection->getAttributes(PurgeOn::class) as $attribute) {
-                    /** @var PurgeOn $purgeOn */
                     $purgeOn = $attribute->newInstance();
 
                     if (null === $purgeOn->route || \in_array($routeName, $purgeOn->route, true)) {

@@ -53,7 +53,7 @@ final class RegisterExpressionLanguageProvidersPass implements CompilerPassInter
         }
 
         $providerReferences = [];
-        foreach ($container->findTaggedServiceIds('purgatory.expression_language_provider', true) as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('purgatory.expression_language_provider', true) as $id => $_) {
             $providerReferences[] = new Reference($id);
         }
 

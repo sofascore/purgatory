@@ -61,7 +61,6 @@ final class MethodResolver implements SubscriptionResolverInterface
             return false;
         }
 
-        /** @var TargetedProperties $targetedProperties */
         $targetedProperties = $reflectionAttribute[0]->newInstance();
 
         foreach ($targetedProperties->properties as $targetProperty) {
