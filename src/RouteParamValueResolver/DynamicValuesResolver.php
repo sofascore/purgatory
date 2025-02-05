@@ -46,7 +46,7 @@ final class DynamicValuesResolver implements ValuesResolverInterface
             ), previous: $e);
         }
 
-        /** @var object|mixed $arg */
+        /** @var object|scalar|array<object|scalar> $arg */
         $arg = null === $propertyPath ? $entity : $this->propertyAccessor->getValue($entity, $propertyPath);
 
         /** @var scalar|list<?scalar>|null $values */
